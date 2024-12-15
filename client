@@ -1,0 +1,15 @@
+use reqwest::Error;
+
+#[tokio::main]
+async fn main() -> Result<(), Error> {
+    let api_key = "your_api_key";
+    let city = "London";
+    let url = format!("http://api.openweathermap.org/data/2.5/weather?q={}&appid={}", city, api_key);
+    
+    let response = reqwest::get(&url).await?.json::<serde_json::Value>().await?;
+    
+    let temp = response["main"]["temp"].as_f64().unwrap();
+    println!("Temperature in {}: {}°C", city, temp - 273.15);
+
+    Ok(())
+}
